@@ -1,0 +1,35 @@
+body {
+    font-family: sans-serif;
+    font-size: large;
+    padding: 0;
+    justify-content: end;
+    text-align: justify;
+}
+
+.paragraph{
+    margin-bottom:1vw;
+}
+
+header {
+    width:100%;
+    background-color: black;
+    color: #fff;
+    padding:0.5vw 0; 
+    text-align: center;
+    border-radius: 10px;
+}
+
+.logo{
+	background-color: black;
+    color:white;
+    font-size: 30px;
+    font-family:sans-serif;
+    font-weight:bold;
+    border: 1px solid white;
+    margin:1vw;
+    border-radius:10px;
+    padding:1vw 5vw;
+    display:flex;
+    width:fit-content;
+    align-self: center;
+}

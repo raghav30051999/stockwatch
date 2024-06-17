@@ -1,0 +1,317 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Dashboard</title>
+    <header style="background-color: black; height:fit-content;padding:1vh 0vh; border-radius: 10px;">
+        <div class="logo">
+            Stockwatch
+        </div>
+    </header>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            font-family: sans-serif;
+        }
+
+        .logo {
+            background-color: black;
+      
+            color: white;
+            font-size: 30px;
+            font-family: sans-serif;
+            font-weight: bold;
+            border: 1px solid white;
+            margin: 3vh 1vw;
+            border-radius: 10px;
+            padding: 1vw 5vw;
+            display: flex;
+            width: fit-content;
+            align-self: center;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            border: 1px solid black;
+            text-align: center;
+            min-width: 250px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content div {
+            color: black;
+            padding: 12px 16px;
+            width: 30vw;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content div:hover {
+            background-color: #f1f1f1;
+        }
+        .show {
+            display: block;
+        }
+        .profile-container {
+            padding: 2%;
+            text-align: justify;
+            color: black;
+        }
+        .news-container {
+            padding: 2%;
+            text-align: justify;
+            color: black;
+        }
+        .news-item {
+            margin-bottom: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div style="padding:0% 2%; text-align:left;">
+        <form id="search-form" action="/search" method="post">
+            <input style="margin: 3vh 0vw;width:32vw; height:5vh; border-radius:15px;" type="text" id="symbol-input" name="symbol" placeholder="Enter Stock Symbol" autocomplete="off" required>
+            <div id="dropdown" class="dropdown-content"></div>
+            <button style="width:fit-content; height:5vh; border-radius:15px;" type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="profile-container">
+    {% if profile %}
+        <h2>Company Profile: {{ profile[1]}}</h2>
+        <ul>
+            <li><strong>Symbol:</strong> {{ profile[0] }}</li>
+            <li><strong>Exchange:</strong> {{ profile[2] }}</li>
+            <li><strong>Country:</strong> {{ profile[8] }}</li>
+            <li><strong>Sector:</strong> {{ profile[7] }}</li>
+            <li><strong>Industry:</strong> {{ profile[3] }}</li>
+            <li><strong>Description:</strong> {{ profile[5] }}</li>
+        </ul>
+    {% endif %}
+    </div>
+
+    <div style="padding:2%; border:solid 2px black; border-radius:20px;" id="stock-graph">{{ graph_html|safe }}</div>
+
+    <script>
+        document.getElementById('symbol-input').addEventListener('input', function() {
+            const query = this.value;
+            if (query.length > 1) {
+                fetch(`/api/symbol_search?showplan=true&query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const dropdown = document.getElementById('dropdown');
+                        dropdown.innerHTML = '';
+                        data.matches.forEach(symbol => {
+                            if (symbol.exchange === 'NYSE') { // Filter for NYSE stocks
+                                const div = document.createElement('div');
+                                div.textContent = `${symbol.symbol} - ${symbol.instrument_name} - ${symbol.exchange}`;
+                                div.addEventListener('click', function() {
+                                    document.getElementById('symbol-input').value = symbol.symbol;
+                                    dropdown.classList.remove('show');
+                                });
+                                dropdown.appendChild(div);
+                            }
+                        });
+                        if (dropdown.childElementCount > 0) {
+                            dropdown.classList.add('show');
+                        } else {
+                            dropdown.classList.remove('show');
+                        }
+                    });
+            } else {
+                document.getElementById('dropdown').classList.remove('show');
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('dropdown');
+            if (!event.target.closest('#symbol-input')) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+
+    <div class="news-container">
+        <h2>Latest News:</h2>
+        {% if news %}
+            {% for item in news %}
+                <div class="news-item">
+                    <a style="color:black;" href="{{ item['Link'] }}" target="_blank"><strong>{{ item['Title'] }}</strong></a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No news available.</p>
+        {% endif %}
+    </div>
+<br></br>
+<footer>
+    <p style="color:white;background-color:black; height:fit-content; padding:3vh 0vw;font-weight: bold;text-align:center;font-size:large; font-family: sans-serif; border-radius:10px;"> Thanks to Twelvedata, Alphavantage & Moneycontrol APIs</p>
+</footer>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Dashboard</title>
+    <header style="background-color: black; height:fit-content;padding:1vh 0vh; border-radius: 10px;">
+        <div class="logo">
+            Stockwatch
+        </div>
+    </header>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            font-family: sans-serif;
+        }
+
+        .logo {
+            background-color: black;
+            color: white;
+            font-size: 30px;
+            font-family: sans-serif;
+            font-weight: bold;
+            border: 1px solid white;
+            margin: 3vh 1vw;
+            border-radius: 10px;
+            padding: 1vw 5vw;
+            display: flex;
+            width: fit-content;
+            align-self: center;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            border: 1px solid black;
+            text-align: center;
+            min-width: 250px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        .dropdown-content div {
+            color: black;
+            padding: 12px 16px;
+            width: 30vw;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content div:hover {
+            background-color: #f1f1f1;
+        }
+        .show {
+            display: block;
+        }
+        .profile-container {
+            padding: 2%;
+            text-align: justify;
+            color: black;
+        }
+        .news-container {
+            padding: 2%;
+            text-align: justify;
+            color: black;
+        }
+        .news-item {
+            margin-bottom: 10px;
+            text-decoration: none;
+        }
+        .hidden-border {
+            border: none;
+        }
+        .visible-border {
+            border: solid 2px black;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div style="padding:0% 2%; text-align:left;">
+        <form id="search-form" action="/search" method="post">
+            <input style="margin: 3vh 0vw;width:32vw; height:5vh; border-radius:15px;" type="text" id="symbol-input" name="symbol" placeholder="Enter Stock Symbol" autocomplete="off" required>
+            <div id="dropdown" class="dropdown-content"></div>
+            <button style="width:fit-content; height:5vh; border-radius:15px;" type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="profile-container">
+    {% if profile %}
+        <h2>Company Profile: {{ profile[1]}}</h2>
+        <ul>
+            <li><strong>Symbol:</strong> {{ profile[0] }}</li>
+            <li><strong>Exchange:</strong> {{ profile[2] }}</li>
+            <li><strong>Country:</strong> {{ profile[8] }}</li>
+            <li><strong>Sector:</strong> {{ profile[7] }}</li>
+            <li><strong>Industry:</strong> {{ profile[3] }}</li>
+            <li><strong>Description:</strong> {{ profile[5] }}</li>
+        </ul>
+    {% endif %}
+    </div>
+
+    <div id="stock-graph" class="{{ 'visible-border' if graph_html else 'hidden-border' }}">
+        {{ graph_html|safe }}
+    </div>
+
+    <script>
+        document.getElementById('symbol-input').addEventListener('input', function() {
+            const query = this.value;
+            if (query.length > 1) {
+                fetch(`/api/symbol_search?showplan=true&query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const dropdown = document.getElementById('dropdown');
+                        dropdown.innerHTML = '';
+                        data.matches.forEach(symbol => {
+                            if (symbol.exchange === 'NYSE') { // Filter for NYSE stocks
+                                const div = document.createElement('div');
+                                div.textContent = `${symbol.symbol} - ${symbol.instrument_name} - ${symbol.exchange}`;
+                                div.addEventListener('click', function() {
+                                    document.getElementById('symbol-input').value = symbol.symbol;
+                                    dropdown.classList.remove('show');
+                                });
+                                dropdown.appendChild(div);
+                            }
+                        });
+                        if (dropdown.childElementCount > 0) {
+                            dropdown.classList.add('show');
+                        } else {
+                            dropdown.classList.remove('show');
+                        }
+                    });
+            } else {
+                document.getElementById('dropdown').classList.remove('show');
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('dropdown');
+            if (!event.target.closest('#symbol-input')) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+
+    <div class="news-container">
+        <h2>Latest News:</h2>
+        {% if news %}
+            {% for item in news %}
+                <div class="news-item">
+                    <a style="color:black;" href="{{ item['Link'] }}" target="_blank"><strong>{{ item['Title'] }}</strong></a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No news available.</p>
+        {% endif %}
+    </div>
+<br></br>
+<footer>
+    <p style="color:white;background-color:black; height:fit-content; padding:3vh 0vw;font-weight: bold;text-align:center;font-size:large; font-family: sans-serif; border-radius:10px;"> Thanks to Twelvedata, Alphavantage & Moneycontrol APIs</p>
+</footer>
+</body>
+</html>
