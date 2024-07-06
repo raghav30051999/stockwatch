@@ -239,7 +239,7 @@ def fetch_and_store_stock_data(symbol):
 
 # Function to fetch and store company profile data
 def fetch_and_store_company_profile(symbol):
-    api_key = '4ZVKFKMF7CYV423U'
+    api_key = 'BD167Z1D2D74NVWM'
     url = f'https://www.alphavantage.co/query?function=OVERVIEW&symbol={symbol}&apikey={api_key}'
     response = requests.get(url)
     if response.status_code == 200:
